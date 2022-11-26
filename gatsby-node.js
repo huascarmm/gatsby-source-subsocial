@@ -1,4 +1,4 @@
-const { pushNode, subsocial_api, postBySpaceId } = require("./methods")
+const { pushNode, subsocial_api, postsBySpaceId } = require("./methods")
 exports.sourceNodes = async (
   { actions, createNodeId, createContentDigest },
   {

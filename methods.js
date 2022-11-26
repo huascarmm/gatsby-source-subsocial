@@ -50,13 +50,13 @@ const subsocial_api = async ({ substrateNodeUrl, ipfsNodeUrl, phraseSecret }) =>
  * @param {*} spaceId 
  * @returns 
  */
-const postBySpaceId = async ({ api, spaceId }) => {
+const postsBySpaceId = async ({ api, spaceId }) => {
     const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
     const posts = await api.base.findPosts({ ids: postIds });
     return posts;
 };
 
-module.exports = { pushNode, subsocial_api, postBySpaceId };
+module.exports = { pushNode, subsocial_api, postsBySpaceId };
 
 
 // /**
