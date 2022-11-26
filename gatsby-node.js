@@ -14,6 +14,8 @@ exports.sourceNodes = async (
   try {
 
     const api = await subsocial_api({ substrateNodeUrl, ipfsNodeUrl, phraseSecret });
+    console.log({ api })
+
     const listSpaces = await api.findPublicSpaces(spaceIds);
     let promises = []
     for (space of listSpaces) {

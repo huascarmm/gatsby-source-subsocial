@@ -40,6 +40,7 @@ const subsocial_api = async ({ substrateNodeUrl, ipfsNodeUrl, phraseSecret }) =>
     api_local.ipfs.setWriteHeaders({
         authorization: "Basic " + authHeader,
     });
+    console.log({ api_local })
 
     return api_local
 }
