@@ -15,11 +15,12 @@ exports.sourceNodes = async (
 
     const api = await subsocial_api({ substrateNodeUrl, ipfsNodeUrl, phraseSecret });
     const listSpaces = await api.findPublicSpaces(spaceIds);
-    let posts = [];
-    listSpaces.map(async (space) => {
-      const spacePosts = await postBySpaceId({ api, space });
-      spacePosts.map(post => { posts.push(post) });
-    });
+    let promises = []
+    for (space of listSpaces) {
+      promises.push(postsBySpaceId({ api, spaceId: space.id }))
+    }
+    const requests = await Promise.all(promises);
+    const posts = requests.reduce((acum, curr) => acum.concat(curr), []).map(({ content }) => content);
     pushNode(posts, 'postsSubsocial');
 
   } catch (error) {
