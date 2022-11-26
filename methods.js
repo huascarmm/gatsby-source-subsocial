@@ -6,7 +6,9 @@ const { SubsocialApi, generateCrustAuthToken } = require("@subsocial/api");
  * @param {*} item data object
  * @param {*} nodeName name or type to node
  */
-const pushNode = ({ item, nodeName, createNodeId, createContentDigest }) => {
+const pushNode = ({ actions, item, nodeName, createNodeId, createContentDigest }) => {
+    const { createNode } = actions;
+
     const nodeMeta = {
         ...item.content,
         id: createNodeId(`${item.struct.id}`),

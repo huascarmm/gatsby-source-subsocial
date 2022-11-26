@@ -24,7 +24,7 @@ exports.sourceNodes = async (
     const requests = await Promise.all(promises);
     const posts = requests.reduce((acum, curr) => acum.concat(curr), []);
     for (post of posts) {
-      pushNode({ item: post, nodeName: 'PostsSubsocial', createNodeId, createContentDigest });
+      pushNode({ actions, item: post, nodeName: 'PostsSubsocial', createNodeId, createContentDigest });
     }
 
   } catch (error) {
