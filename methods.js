@@ -56,7 +56,7 @@ const postBySpaceId = async ({ api, spaceId }) => {
     return posts;
 };
 
-export { pushNode, subsocial_api, postBySpaceId };
+module.exports = { pushNode, subsocial_api, postBySpaceId };
 
 
 // /**
