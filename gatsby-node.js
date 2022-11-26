@@ -20,9 +20,9 @@ exports.sourceNodes = async (
       promises.push(postsBySpaceId({ api, spaceId: space.id }))
     }
     const requests = await Promise.all(promises);
-    const posts = requests.reduce((acum, curr) => acum.concat(curr), []).map(({ content }) => content);
+    const posts = requests.reduce((acum, curr) => acum.concat(curr), []);
     for (post of posts) {
-      pushNode(post, 'postsSubsocial');
+      pushNode({ item: post, nodeName: 'PostsSubsocial', createNodeId, createContentDigest });
     }
 
   } catch (error) {

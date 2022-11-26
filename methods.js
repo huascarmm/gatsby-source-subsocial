@@ -4,16 +4,16 @@ const { SubsocialApi, generateCrustAuthToken } = require("@subsocial/api");
  * function to set data within node gatsby
  * 
  * @param {*} item data object
- * @param {*} typeNode name or type to node
+ * @param {*} nodeName name or type to node
  */
-const pushNode = (item, typeNode) => {
+const pushNode = ({ item, nodeName, createNodeId, createContentDigest }) => {
     const nodeMeta = {
         ...item.content,
         id: createNodeId(`${item.struct.id}`),
         parent: null,
         children: [],
         internal: {
-            type: typeNode || nodeName,
+            type: nodeName,
             contentDigest: createContentDigest(item),
             content: JSON.stringify({
                 ...item.content,
