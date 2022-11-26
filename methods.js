@@ -6,7 +6,7 @@ const { SubsocialApi, generateCrustAuthToken } = require("@subsocial/api");
  * @param {*} item data object
  * @param {*} typeNode name or type to node
  */
-export const pushNode = (item, typeNode) => {
+export function pushNode(item, typeNode) {
     const nodeMeta = {
         ...item.content,
         id: createNodeId(`${item.struct.id}`),
@@ -26,7 +26,7 @@ export const pushNode = (item, typeNode) => {
     createNode(node);
 };
 
-export const subsocial_api = async ({ substrateNodeUrl, ipfsNodeUrl, phraseSecret }) => {
+export async function subsocial_api({ substrateNodeUrl, ipfsNodeUrl, phraseSecret }) {
     const api_local = await SubsocialApi.create({
         substrateNodeUrl,
         ipfsNodeUrl,
@@ -50,7 +50,7 @@ export const subsocial_api = async ({ substrateNodeUrl, ipfsNodeUrl, phraseSecre
  * @param {*} spaceId 
  * @returns 
  */
-export const postBySpaceId = async ({ api, spaceId }) => {
+export async function postBySpaceId({ api, spaceId }) {
     const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
     const posts = await api.base.findPosts({ ids: postIds });
     return posts;
