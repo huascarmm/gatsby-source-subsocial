@@ -42,7 +42,6 @@ const subsocial_api = async ({ substrateNodeUrl, ipfsNodeUrl, phraseSecret }) =>
     api_local.ipfs.setWriteHeaders({
         authorization: "Basic " + authHeader,
     });
-    console.log({ api_local })
 
     return api_local
 }
@@ -59,21 +58,19 @@ const postsBySpaceId = async ({ api, spaceId }) => {
     return posts;
 };
 
-module.exports = { pushNode, subsocial_api, postsBySpaceId };
+/**
+ * space By Owner
+ * 
+ * @param {*} accountId 
+ * @param {*} callback function to set spaceIds list how params 
+ * @returns 
+ */
+const spacesByAddress = async ({ api, addressAccount }) => {
+    const spaceIds = await api.blockchain.spaceIdsByOwner(addressAccount);
+    return await api.base.findSpaces({ ids: spaceIds });
+};
 
-
-// /**
-//  * space By Owner
-//  * 
-//  * @param {*} accountId 
-//  * @param {*} callback function to set spaceIds list how params 
-//  * @returns 
-//  */
-// const spaceByOwner = async (accountId, callback) => {
-//     const spaceIds = await api.blockchain.spaceIdsByOwner(accountId);
-//     if (callback) callback(spaceIds);
-//     return api.base.findSpaces({ ids: spaceIds });
-// };
+module.exports = { pushNode, subsocial_api, postsBySpaceId, spacesByAddress };
 
 // /**
 //  * spaces by profile accounts
