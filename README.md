@@ -63,12 +63,13 @@ Usually, the format for posts is:
 export const query = graphql`
   query {
     allPostsSubsocial {
-      nodes {
-        content {
-          body
-          image
-          title
-          tags
+      edges {
+        node {
+            id
+            image
+            tags
+            title
+            body
         }
       }
     }
