@@ -32,11 +32,11 @@ For example
 {
 	resolve: `gatsby-source-subsocial`,
 	options: {
-      substrateNodeUrl: `wss://para.f3joule.space`,
-      ipfsNodeUrl: `https://crustwebsites.net`,
-      spaceIds: ["10497"],
-      addressAccount: "3qrRD1nbHj5u8cRsJBd1mEm9JGM9jwfzKGQgQwx1ztuigZub",  //you can use env vars process.env.ADDRESS_ACCOUNT,
-      phraseSecret: "hello this is a passphrase of my address" //you can use env vars process.env.PHRASE_SECRET
+          substrateNodeUrl: `wss://para.f3joule.space`,
+          ipfsNodeUrl: `https://crustwebsites.net`,
+          spaceIds: ["10497"],
+          addressAccount: "3qrRD1nbHj5u8cRsJBd1mEm9JGM9jwfzKGQgQwx1ztuigZub",  //you can use env vars process.env.ADDRESS_ACCOUNT,
+          phraseSecret: "hello this is a passphrase of my address" //you can use env vars process.env.PHRASE_SECRET
 	},
 }
 ```
