@@ -73,14 +73,14 @@ const postsBySpaceId = async ({ api, spaceId }) => {
 /**
  * space By Owner
  * 
- * @param {*} accountId 
- * @param {*} callback function to set spaceIds list how params 
+ * @param {*} addressAccount 
+ * @param {*} api subsocial api  
  * @returns 
  */
 const spacesByAddress = async ({ api, addressAccount }) => {
-    return await api.blockchain.spaceIdsByOwner(addressAccount);
-    // return await api.findPublicSpaces(spaceIds);
-};
+    const spacesIds = await api.blockchain.spaceIdsByOwner(addressAccount);
+    return await api.findPublicSpaces(spacesIds)
+}
 
 module.exports = { pushNode, subsocial_api, postsBySpaceId, spacesByAddress, simplePushNode };
 
