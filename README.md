@@ -28,7 +28,7 @@ Setup the file with these params:
 
 For example
 
-```
+```js
 {
 	resolve: `gatsby-source-subsocial`,
 	options: {
@@ -38,16 +38,16 @@ For example
     addressAccount: "3qrRD1nbHj5u8cRsJBd1mEm9JGM9jwfzKGQgQwx1ztuigZub",  //you can use env vars process.env.ADDRESS_ACCOUNT,
     phraseSecret: "hello this is a passphrase of my address" //you can use env vars process.env.PHRASE_SECRET
 	},
-},
+}
 ```
 
-You can check your spaceIds in http://localhost:8000/\_\_\_graphql
+You can check your spaceIds in ` http://localhost:8000/___graphql`
 
 - Go to menu: Graphiql Explorer -> choose: AllMySpacesSubsocial/edge/nodes
 
 #### Step 4: GraphQl config and requests in components
 
-Go to you graphql project, usually in http://localhost:8000/\_\_\_graphql
+Go to you graphql project, usually in `http://localhost:8000/___graphql`
 Check this data:
 
 - Go to menu: Graphiql Explorer -> choose: AllPostsSubsocial/nodes: Here you can choose posts field to format query
@@ -76,6 +76,6 @@ export const query = graphql`
 `
 ```
 
-## ** Project demo**
+## Project demo
 
 [https://github.com/huascarmm/subsocial-gatsby-example](https://github.com/huascarmm/subsocial-gatsby-example)

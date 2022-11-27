@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-subsocial",
-  "version": "1.0.5",
+  "version": "1.0.12",
   "description": "Plugin to get posts from subsocial, using spacesIds",
   "main": "gatsby-node.js",
   "scripts": {
