@@ -6,7 +6,7 @@ You can use the plugin in a template or new project, must be a gatsby project.
 
 #### Step 2: Install plugin
 
-you have to install the plugin:
+Install the plugin:
 
 ```
 //npm
@@ -35,8 +35,8 @@ For example
         substrateNodeUrl: `wss://para.f3joule.space`,
         ipfsNodeUrl: `https://crustwebsites.net`,
         spaceIds: ["10497"],
-        addressAccount: "3qrRD1nbHj5u8cRsJBd1mEm9JGM9jwfzKGQgQwx1ztuigZub",  //you can use env vars process.env.ADDRESS_ACCOUNT,
-        phraseSecret: "hello this is a passphrase of my address" //you can use env vars process.env.PHRASE_SECRET
+        addressAccount: "3qrRD1nbHj5u8cRsJBd1mEm9JGM9jwfzKGQgQwx1ztuigZub",  //Use env vars process.env.ADDRESS_ACCOUNT,
+        phraseSecret: "hello this is a passphrase of my address" //Use env vars process.env.PHRASE_SECRET
     },
 }
 ```
