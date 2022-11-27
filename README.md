@@ -41,8 +41,8 @@ For example
     substrateNodeUrl: `wss://para.f3joule.space`,
     ipfsNodeUrl: `https://crustwebsites.net`,
     spaceIds: ["10497"],
-    addressAccount: "3qrRD1nbHj5u8cRsJBd1mEm9JGM9jwfzKGQgQwx1vvuigZub",
-    phraseSecret: "hello this is a passphares of my address"
+    addressAccount: "3qrRD1nbHj5u8cRsJBd1mEm9JGM9jwfzKGQgQwx1ztuigZub",  //you can use env vars process.env.ADDRESS_ACCOUNT,
+    phraseSecret: "hello this is a passphrase of my address" //you can use env vars process.env.PHRASE_SECRET
 	},
 },
 ```
