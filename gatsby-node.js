@@ -27,7 +27,7 @@ exports.sourceNodes = async (
 
     const mySpaces = await spacesByAddress({ api, addressAccount });
     for (space of mySpaces) {
-      pushNode({ actions, item: space, nodeName: 'SpacesSubsocial', createNodeId, createContentDigest });
+      pushNode({ actions, item: space, nodeName: 'MySpacesSubsocial', createNodeId, createContentDigest });
     }
 
   } catch (error) {

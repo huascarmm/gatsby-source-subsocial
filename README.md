@@ -1,17 +1,36 @@
 ## **How to use in gatsby**
 
-#### Step1: Create a gatsby project or use in a template
+#### Step 1: Create a gatsby project or use in a template
 
-You can use the plugin in a template or new project, only must be a gatsby project.
+You can use the plugin in a template or new project, must be a gatsby project.
 
-#### Step1: Setup gatsby-config.js
+#### Step 2: Install plugin
+
+you have to install the plugin:
+
+```
+//npm
+npm i -S gatsby-source-subsocial
+
+//yarn
+yarn add gatsby-source-subsocial
+```
+
+#### Step 3: Setup gatsby-config.js
 
 Setup the file with these params:
 
+    phraseSecret,
+    substrateNodeUrl,
+    ipfsNodeUrl,
+    spaceIds,
+    addressAccount
+
 - substrateNodeUrl: subsocial websocket
 - ipfsNodeUrl : ipfs url
-- recommendedSpaceIds : Array of spaces you want to show
+- spaceIds : Array of spaces you want to show
 - addressAccount : posts from address you want to show
+- phraseSecret: your address passPhrase
 
 For example
 
@@ -23,15 +42,24 @@ For example
     ipfsNodeUrl: `https://crustwebsites.net`,
     spaceIds: ["10497"],
     addressAccount: "3qrRD1nbHj5u8cRsJBd1mEm9JGM9jwfzKGQgQwx1vvuigZub",
+    phraseSecret: "hello this is a passphares of my address"
 	},
 },
 ```
 
-#### Step2: GraphQl requests in components
+#### Step 4: GraphQl config and requests in components
 
-You have to build your query and make graphql requests according your render requirements
+Go to you graphql project, usually in http://localhost:8000/\_\_\_graphql
+Check this data:
 
-For example:
+- AllPostsSubsocial/edge/nodes: Here you can see the spaceId posts
+- AllMySpacesSubsocial/edge/nodes: Here you can your account spaceIds
+
+#### Step 5: Render your data
+
+Copy the graphQl structure request, then add to your component.
+
+Usually, for posts is:
 
 ```js
 ...
@@ -57,10 +85,6 @@ export const query = graphql`
   }
 `
 ```
-
-#### Step3: Render your data
-
-According query, render the posts
 
 ## ** Project demo**
 
