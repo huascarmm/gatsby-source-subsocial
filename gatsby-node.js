@@ -1,4 +1,4 @@
-const { pushNode, subsocial_api, postsBySpaceId, spacesByAddress } = require("./methods");
+const { pushNode, subsocial_api, postsBySpaceId, spacesByAddress, simplePushNode } = require("./methods");
 
 exports.sourceNodes = async (
   { actions, createNodeId, createContentDigest },
@@ -27,7 +27,7 @@ exports.sourceNodes = async (
 
     const mySpaces = await spacesByAddress({ api, addressAccount });
     for (space of mySpaces) {
-      pushNode({ actions, item: space, nodeName: 'MySpacesSubsocial', createNodeId, createContentDigest });
+      simplePushNode({ actions, item: space, nodeName: 'MySpacesSubsocial', createNodeId, createContentDigest });
     }
 
   } catch (error) {
