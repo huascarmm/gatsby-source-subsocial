@@ -28,18 +28,6 @@ const pushNode = ({ actions, item, nodeName, createNodeId, createContentDigest }
     createNode(node);
 };
 
-const simplePushNode = ({ actions, item, nodeName, createNodeId, createContentDigest }) => {
-    const { createNode } = actions;
-    const nodeMeta = {
-        id: createNodeId(item),
-        internal: {
-            type: nodeName,
-            contentDigest: createContentDigest({ id: item }),
-        },
-    };
-    createNode(nodeMeta);
-};
-
 const subsocial_api = async ({ substrateNodeUrl, ipfsNodeUrl, phraseSecret }) => {
     const api_local = await SubsocialApi.create({
         substrateNodeUrl,
@@ -82,7 +70,7 @@ const spacesByAddress = async ({ api, addressAccount }) => {
     return await api.findPublicSpaces(spacesIds)
 }
 
-module.exports = { pushNode, subsocial_api, postsBySpaceId, spacesByAddress, simplePushNode };
+module.exports = { pushNode, subsocial_api, postsBySpaceId, spacesByAddress };
 
 // /**
 //  * spaces by profile accounts

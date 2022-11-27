@@ -20,12 +20,6 @@ yarn add gatsby-source-subsocial
 
 Setup the file with these params:
 
-    phraseSecret,
-    substrateNodeUrl,
-    ipfsNodeUrl,
-    spaceIds,
-    addressAccount
-
 - substrateNodeUrl: subsocial websocket
 - ipfsNodeUrl : ipfs url
 - spaceIds : Array of spaces you want to show
@@ -47,38 +41,34 @@ For example
 },
 ```
 
+You can check your spaceIds in http://localhost:8000/\_\_\_graphql
+
+- Go to menu: Graphiql Explorer -> choose: AllMySpacesSubsocial/edge/nodes
+
 #### Step 4: GraphQl config and requests in components
 
 Go to you graphql project, usually in http://localhost:8000/\_\_\_graphql
 Check this data:
 
-- AllPostsSubsocial/edge/nodes: Here you can see the spaceId posts
-- AllMySpacesSubsocial/edge/nodes: Here you can your account spaceIds
+- Go to menu: Graphiql Explorer -> choose: AllPostsSubsocial/nodes: Here you can choose posts field to format query
 
 #### Step 5: Render your data
 
 Copy the graphQl structure request, then add to your component.
 
-Usually, for posts is:
+Usually, the format for posts is:
 
 ```js
 ...
 export const query = graphql`
   query {
-    allSpacesSubsocial {
-      edges {
-        node {
-          id
-          content {
-            name
-            tags
-            about
-            email
-            image
-            links
-            summary
-            isShowMore
-          }
+    allPostsSubsocial {
+      nodes {
+        content {
+          body
+          image
+          title
+          tags
         }
       }
     }
