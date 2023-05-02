@@ -1,4 +1,4 @@
-const { pushNode, subsocial_api, postsBySpaceId, spacesByAddress } = require("./methods");
+const { pushNode, createSubsocialApi, getPostsBySpaceId, getSpacesByAddress } = require("./methods");
 
 exports.sourceNodes = async (
   { actions, createNodeId, createContentDigest },
@@ -13,11 +13,11 @@ exports.sourceNodes = async (
 
   try {
 
-    const api = await subsocial_api({ substrateNodeUrl, ipfsNodeUrl, phraseSecret });
+    const api = await createSubsocialApi({ substrateNodeUrl, ipfsNodeUrl, phraseSecret });
     const listSpaces = await api.findPublicSpaces(spaceIds);
     let promises = []
     for (space of listSpaces) {
-      promises.push(postsBySpaceId({ api, spaceId: space.id }))
+      promises.push(getPostsBySpaceId({ api, spaceId: space.id }))
     }
     const requests = await Promise.all(promises);
     const posts = requests.reduce((acum, curr) => acum.concat(curr), []);
@@ -25,7 +25,7 @@ exports.sourceNodes = async (
       pushNode({ actions, item: post, nodeName: 'PostsSubsocial', createNodeId, createContentDigest });
     }
 
-    const mySpaces = await spacesByAddress({ api, addressAccount });
+    const mySpaces = await getSpacesByAddress({ api, addressAccount });
     for (space of mySpaces) {
       pushNode({ actions, item: space, nodeName: 'MySpacesSubsocial', createNodeId, createContentDigest });
     }

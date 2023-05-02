@@ -8,8 +8,8 @@ const { SubsocialApi, generateCrustAuthToken } = require("@subsocial/api");
  */
 const pushNode = ({ actions, item, nodeName, createNodeId, createContentDigest }) => {
     const { createNode } = actions;
-
-    const nodeMeta = {
+    const node = {
+        ...item,
         ...item.content,
         id: createNodeId(`${item.struct.id}`),
         parent: null,
@@ -17,60 +17,34 @@ const pushNode = ({ actions, item, nodeName, createNodeId, createContentDigest }
         internal: {
             type: nodeName,
             contentDigest: createContentDigest(item),
-            content: JSON.stringify({
-                ...item.content,
-                id: item.struct.contentId,
-            }),
+            content: JSON.stringify({ ...item.content, id: item.struct.contentId }),
         },
     };
-
-    const node = Object.assign({}, nodeMeta, item);
     createNode(node);
 };
 
-const subsocial_api = async ({ substrateNodeUrl, ipfsNodeUrl, phraseSecret }) => {
-    const api_local = await SubsocialApi.create({
-        substrateNodeUrl,
-        ipfsNodeUrl,
-    });
+const createSubsocialApi = async ({ substrateNodeUrl, ipfsNodeUrl, phraseSecret }) => {
+    if (!phraseSecret) throw new Error("phraseSecret not found");
 
-    if (!phraseSecret) return new Error("phraseSecret not found");
-
+    const api = await SubsocialApi.create({ substrateNodeUrl, ipfsNodeUrl });
     const authHeader = generateCrustAuthToken(phraseSecret);
+    api.ipfs.setWriteHeaders({ authorization: "Basic " + authHeader });
 
-    // Data can come from anywhere, but for now create it manually
-    api_local.ipfs.setWriteHeaders({
-        authorization: "Basic " + authHeader,
-    });
-
-    return api_local
+    return api;
 }
 
-/**
- * posts by spaceId
- * 
- * @param {*} spaceId 
- * @returns 
- */
-const postsBySpaceId = async ({ api, spaceId }) => {
+const getPostsBySpaceId = async ({ api, spaceId }) => {
     const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
-    const posts = await api.base.findPosts({ ids: postIds });
-    return posts;
+    return await api.base.findPosts({ ids: postIds });
 };
 
-/**
- * space By Owner
- * 
- * @param {*} addressAccount 
- * @param {*} api subsocial api  
- * @returns 
- */
-const spacesByAddress = async ({ api, addressAccount }) => {
-    const spacesIds = await api.blockchain.spaceIdsByOwner(addressAccount);
-    return await api.findPublicSpaces(spacesIds)
+const getSpacesByAddress = async ({ api, addressAccount }) => {
+    const spaceIds = await api.blockchain.spaceIdsByOwner(addressAccount);
+    return await api.findPublicSpaces(spaceIds);
 }
+module.exports = { pushNode, createSubsocialApi, getPostsBySpaceId, getSpacesByAddress };
 
-module.exports = { pushNode, subsocial_api, postsBySpaceId, spacesByAddress };
+// module.exports = { pushNode, subsocial_api, postsBySpaceId, spacesByAddress };
 
 // /**
 //  * spaces by profile accounts
