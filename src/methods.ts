@@ -12,18 +12,22 @@ export const createSubsocialApi = async ({
   ipfsNodeUrl: string;
   seedPhrase: string;
 }): Promise<SubsocialApi> => {
-  const api_local = await SubsocialApi.create({
-    substrateNodeUrl,
-    ipfsNodeUrl,
-  });
-  if (!seedPhrase) throw new Error("PhraseSecret not found");
+  try {
+    const api_local = await SubsocialApi.create({
+      substrateNodeUrl,
+      ipfsNodeUrl,
+    });
+    if (!seedPhrase) throw new Error("PhraseSecret not found");
 
-  const authHeader = generateCrustAuthToken(seedPhrase);
+    const authHeader = generateCrustAuthToken(seedPhrase);
 
-  api_local.ipfs.setWriteHeaders({
-    authorization: "Basic " + authHeader,
-  });
-  return api_local;
+    api_local.ipfs.setWriteHeaders({
+      authorization: "Basic " + authHeader,
+    });
+    return api_local;
+  } catch (error: any) {
+    throw new Error("Error while building Subsocial API: " + error.message);
+  }
 };
 
 export const getAllDataOfSpace = async (
@@ -32,8 +36,8 @@ export const getAllDataOfSpace = async (
 ) => {
   try {
     const space = await api.findSpace({ id: spaceId });
-    const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
-    let posts = await api.findPosts({ ids: postIds });
+    // const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
+    // let posts = await api.findPosts({ ids: postIds });
     let completePosts: CompletePost[] = [];
     // for (const i in posts) {
     //   const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
