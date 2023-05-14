@@ -103,7 +103,7 @@ export const subNodes = async (
   children = []
 ) => {
   return await elements
-    .filter((element: { struct: { hidden: any } }) => !element.struct.hidden)
+    .filter((element) => !element.struct.hidden)
     .map(async (element: any) => {
       return await subNode(
         api,
