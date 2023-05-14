@@ -79,11 +79,11 @@ export const pushNode = async (
       children
     );
   });
-
+  console.log({ post_with_comments_as_child_node });
   const node = {
     id: createNodeId(`subsocial-space-${space.id}`),
     parent: null,
-    children: post_with_comments_as_child_node,
+    children: [], //post_with_comments_as_child_node,
     struct: space.struct,
     content: space.content,
     internal: {
