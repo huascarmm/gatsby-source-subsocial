@@ -35,11 +35,11 @@ export const getAllDataOfSpace = async (
     const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
     let posts = await api.findPosts({ ids: postIds });
     let completePosts: CompletePost[] = [];
-    for (const i in posts) {
-      const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
-      const replies = await api.findPublicPosts(replyIds);
-      completePosts.push({ ...posts[i], replies });
-    }
+    // for (const i in posts) {
+    //   const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
+    //   const replies = await api.findPublicPosts(replyIds);
+    //   completePosts.push({ ...posts[i], replies });
+    // }
     return { space, completePosts };
   } catch (error: any) {
     throw new Error(
