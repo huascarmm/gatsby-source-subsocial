@@ -56,7 +56,7 @@ const getAllDataOfSpace = (api, spaceId) => __awaiter(void 0, void 0, void 0, fu
 exports.getAllDataOfSpace = getAllDataOfSpace;
 const pushNode = (api, space, posts, actions, createNodeId, createContentDigest) => __awaiter(void 0, void 0, void 0, function* () {
     const { createNode } = actions;
-    const post_with_comments_as_child_node = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
+    const post_with_comments_as_child_node = yield posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
         const children = yield (0, exports.subNodes)(api, createContentDigest, createNodeId, post.id, post.replies);
         const post_w = yield (0, exports.subNode)(api, createContentDigest, createNodeId, `subsocial-space-${space.id}`, { struct: post.struct, content: post.content, id: post.id }, children);
         return post_w;

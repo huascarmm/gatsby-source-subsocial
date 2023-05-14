@@ -62,7 +62,7 @@ export const pushNode = async (
   createContentDigest: (arg0: SpaceData) => any
 ) => {
   const { createNode } = actions;
-  const post_with_comments_as_child_node = posts.map(async (post) => {
+  const post_with_comments_as_child_node = await posts.map(async (post) => {
     const children = await subNodes(
       api,
       createContentDigest,
