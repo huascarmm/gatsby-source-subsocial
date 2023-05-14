@@ -70,7 +70,7 @@ export const pushNode = async (
       post.id,
       post.replies
     );
-    return await subNode(
+    const post_w = await subNode(
       api,
       createContentDigest,
       createNodeId,
@@ -78,8 +78,11 @@ export const pushNode = async (
       { struct: post.struct, content: post.content, id: post.id },
       children
     );
+    return post_w;
   });
-  console.log({ post_with_comments_as_child_node });
+  post_with_comments_as_child_node.forEach((post) => {
+    console.log("post", post);
+  });
   const node = {
     id: createNodeId(`subsocial-space-${space.id}`),
     parent: null,
