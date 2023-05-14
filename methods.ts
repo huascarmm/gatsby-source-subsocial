@@ -81,7 +81,7 @@ export const pushNode = async (
     return post_w;
   });
   post_with_comments_as_child_node.forEach((post) => {
-    console.log("post", post);
+    console.log("post 1", post);
   });
   const node = {
     id: createNodeId(`subsocial-space-${space.id}`),
