@@ -39,14 +39,14 @@ const getAllDataOfSpace = (api, spaceId) => __awaiter(void 0, void 0, void 0, fu
         const space = yield api.findSpace({ id: spaceId });
         if (!space)
             throw new Error("Space not found");
-        // const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
-        // let posts = await api.findPosts({ ids: postIds });
+        const postIds = yield api.blockchain.postIdsBySpaceId(spaceId);
+        let posts = yield api.findPosts({ ids: postIds });
         let completePosts = [];
-        // for (const i in posts) {
-        //   const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
-        //   const replies = await api.findPublicPosts(replyIds);
-        //   completePosts.push({ ...posts[i], replies });
-        // }
+        for (const i in posts) {
+            const replyIds = yield api.blockchain.getReplyIdsByPostId(posts[i].id);
+            const replies = yield api.findPublicPosts(replyIds);
+            completePosts.push(Object.assign(Object.assign({}, posts[i]), { replies }));
+        }
         return { space, completePosts };
     }
     catch (error) {
@@ -64,6 +64,8 @@ const pushNode = (api, space, posts, actions, createNodeId, createContentDigest)
         id: createNodeId(`subsocial-space-${space.id}`),
         parent: null,
         children: post_with_comments_as_child_node,
+        struct: space.struct,
+        content: space.content,
         internal: {
             type: "SpacesSubsocial",
             contentDigest: createContentDigest(space),
