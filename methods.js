@@ -58,9 +58,12 @@ const pushNode = (api, space, posts, actions, createNodeId, createContentDigest)
     const { createNode } = actions;
     const post_with_comments_as_child_node = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
         const children = yield (0, exports.subNodes)(api, createContentDigest, createNodeId, post.id, post.replies);
-        return yield (0, exports.subNode)(api, createContentDigest, createNodeId, `subsocial-space-${space.id}`, { struct: post.struct, content: post.content, id: post.id }, children);
+        const post_w = yield (0, exports.subNode)(api, createContentDigest, createNodeId, `subsocial-space-${space.id}`, { struct: post.struct, content: post.content, id: post.id }, children);
+        return post_w;
     }));
-    console.log({ post_with_comments_as_child_node });
+    post_with_comments_as_child_node.forEach((post) => {
+        console.log("post 1", post);
+    });
     const node = {
         id: createNodeId(`subsocial-space-${space.id}`),
         parent: null,
