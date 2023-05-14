@@ -164,6 +164,7 @@ export const subNode = async (
       contentDigest: createContentDigest(element.content),
     },
   };
+  console.log("node", node);
   return node;
 };
 

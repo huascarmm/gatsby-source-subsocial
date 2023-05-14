@@ -110,6 +110,7 @@ const subNode = (api, createContentDigest, createNodeId, parentId, element, chil
             contentDigest: createContentDigest(element.content),
         },
     };
+    console.log("node", node);
     return node;
 });
 exports.subNode = subNode;

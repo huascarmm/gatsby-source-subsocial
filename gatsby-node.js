@@ -21,7 +21,7 @@ exports.sourceNodes = ({ actions, createNodeId, createContentDigest }, { substra
             const { space, completePosts } = yield (0, methods_1.getAllDataOfSpace)(api, spaceId);
             if (!space)
                 throw new Error("Space not found");
-            (0, methods_1.pushNode)(api, space, completePosts, actions, createNodeId, createContentDigest);
+            yield (0, methods_1.pushNode)(api, space, completePosts, actions, createNodeId, createContentDigest);
         }
     }
     catch (error) {

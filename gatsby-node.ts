@@ -16,7 +16,7 @@ exports.sourceNodes = async (
     for (const spaceId of spaceIds) {
       const { space, completePosts } = await getAllDataOfSpace(api, spaceId);
       if (!space) throw new Error("Space not found");
-      pushNode(
+      await pushNode(
         api,
         space,
         completePosts,
