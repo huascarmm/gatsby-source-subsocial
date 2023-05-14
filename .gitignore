@@ -2,7 +2,7 @@
 /node_modules
 
 # directorios de compilación
-/dist
+# /dist
 
 # archivos de registro
 npm-debug.log*
