@@ -16,7 +16,7 @@
   "author": "Huascar Miranda Martínez <huascarm@gmail.com>",
   "license": "MIT",
   "peerDependencies": {
-    "gatsby": "^4.0.0 ||^5.0.0"
+    "gatsby": "^5.0.0"
   },
   "repository": {
     "type": "git",
