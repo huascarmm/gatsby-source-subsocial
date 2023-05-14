@@ -80,7 +80,7 @@ export const pushNode = async (
     parent: null,
     children: post_with_comments_as_child_node,
     internal: {
-      type: "Space",
+      type: "SpacesSubsocial",
       contentDigest: createContentDigest(space),
     },
   };
