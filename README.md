@@ -23,8 +23,7 @@ Setup the file with these params:
 - substrateNodeUrl: subsocial websocket
 - ipfsNodeUrl : ipfs url
 - spaceIds : Array of spaces you want to show
-- addressAccount : posts from address you want to show
-- phraseSecret: your address passPhrase
+- seedPhrase: your address passPhrase
 
 For example
 
@@ -35,7 +34,6 @@ For example
         substrateNodeUrl: `wss://para.f3joule.space`,
         ipfsNodeUrl: `https://crustwebsites.net`,
         spaceIds: ["10497"],
-        addressAccount: "3qrRD1nbHj5u8cRsJBd1mEm9JGM9jwfzKGQgQwx1ztuigZub",  //Use env vars process.env.ADDRESS_ACCOUNT,
         phraseSecret: "hello this is a passphrase of my address" //Use env vars process.env.PHRASE_SECRET
     },
 }

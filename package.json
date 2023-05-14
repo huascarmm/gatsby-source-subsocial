@@ -1,16 +1,21 @@
 {
   "name": "gatsby-source-subsocial",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Plugin to get posts from subsocial, using spacesIds",
-  "main": "gatsby-node.js",
+  "main": "dist/gatsby-node.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "huascarm <huascarm@gmail.com>",
-  "license": "GNU GPL v3",
+  "keywords": [
+    "Subsocial",
+    "Gatsby",
+    "Source",
+    "Plugin"
+  ],
+  "author": "Huascar Miranda Martínez <huascarm@gmail.com>",
+  "license": "MIT",
   "peerDependencies": {
-    "@subsocial/api": "^0.7.8-dev.0",
     "gatsby": "^4.0.0 ||^5.0.0"
   },
   "repository": {
@@ -21,5 +26,12 @@
     "url": "https://github.com/huascarmm/gatsby-source-subsocial/issues"
   },
   "homepage": "https://github.com/huascarmm/gatsby-source-subsocial#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/showdown": "^2.0.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@subsocial/api": "^0.8.12",
+    "showdown": "^2.1.0"
+  }
 }
