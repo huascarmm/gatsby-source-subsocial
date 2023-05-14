@@ -60,10 +60,11 @@ const pushNode = (api, space, posts, actions, createNodeId, createContentDigest)
         const children = yield (0, exports.subNodes)(api, createContentDigest, createNodeId, post.id, post.replies);
         return yield (0, exports.subNode)(api, createContentDigest, createNodeId, `subsocial-space-${space.id}`, { struct: post.struct, content: post.content, id: post.id }, children);
     }));
+    console.log({ post_with_comments_as_child_node });
     const node = {
         id: createNodeId(`subsocial-space-${space.id}`),
         parent: null,
-        children: post_with_comments_as_child_node,
+        children: [],
         struct: space.struct,
         content: space.content,
         internal: {
