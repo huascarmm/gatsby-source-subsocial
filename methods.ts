@@ -37,14 +37,14 @@ export const getAllDataOfSpace = async (
   try {
     const space = await api.findSpace({ id: spaceId });
     if (!space) throw new Error("Space not found");
-    // const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
-    // let posts = await api.findPosts({ ids: postIds });
+    const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
+    let posts = await api.findPosts({ ids: postIds });
     let completePosts: CompletePost[] = [];
-    // for (const i in posts) {
-    //   const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
-    //   const replies = await api.findPublicPosts(replyIds);
-    //   completePosts.push({ ...posts[i], replies });
-    // }
+    for (const i in posts) {
+      const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
+      const replies = await api.findPublicPosts(replyIds);
+      completePosts.push({ ...posts[i], replies });
+    }
     return { space, completePosts };
   } catch (error: any) {
     throw new Error(
@@ -84,6 +84,8 @@ export const pushNode = async (
     id: createNodeId(`subsocial-space-${space.id}`),
     parent: null,
     children: post_with_comments_as_child_node,
+    struct: space.struct,
+    content: space.content,
     internal: {
       type: "SpacesSubsocial",
       contentDigest: createContentDigest(space),
