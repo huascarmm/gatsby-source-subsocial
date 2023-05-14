@@ -36,6 +36,7 @@ export const getAllDataOfSpace = async (
 ) => {
   try {
     const space = await api.findSpace({ id: spaceId });
+    if (!space) throw new Error("Space not found");
     // const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
     // let posts = await api.findPosts({ ids: postIds });
     let completePosts: CompletePost[] = [];

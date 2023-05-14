@@ -11,15 +11,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const methods_1 = require("./methods");
 exports.sourceNodes = ({ actions, createNodeId, createContentDigest }, { substrateNodeUrl, ipfsNodeUrl, spaceIds, seedPhrase }) => __awaiter(void 0, void 0, void 0, function* () {
-    const api = yield (0, methods_1.createSubsocialApi)({
-        substrateNodeUrl,
-        ipfsNodeUrl,
-        seedPhrase,
-    });
-    for (const spaceId of spaceIds) {
-        const { space, completePosts } = yield (0, methods_1.getAllDataOfSpace)(api, spaceId);
-        if (!space)
-            throw new Error("Space not found");
-        (0, methods_1.pushNode)(api, space, completePosts, actions, createNodeId, createContentDigest);
+    try {
+        const api = yield (0, methods_1.createSubsocialApi)({
+            substrateNodeUrl,
+            ipfsNodeUrl,
+            seedPhrase,
+        });
+        for (const spaceId of spaceIds) {
+            const { space, completePosts } = yield (0, methods_1.getAllDataOfSpace)(api, spaceId);
+            if (!space)
+                throw new Error("Space not found");
+            (0, methods_1.pushNode)(api, space, completePosts, actions, createNodeId, createContentDigest);
+        }
+    }
+    catch (error) {
+        throw new Error("Error global: " + error.message);
     }
 });

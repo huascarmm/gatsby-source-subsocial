@@ -16,30 +16,37 @@ exports.subNode = exports.subNodes = exports.pushNode = exports.getAllDataOfSpac
 const showdown_1 = __importDefault(require("showdown"));
 const api_1 = require("@subsocial/api");
 const createSubsocialApi = ({ substrateNodeUrl, ipfsNodeUrl, seedPhrase, }) => __awaiter(void 0, void 0, void 0, function* () {
-    const api_local = yield api_1.SubsocialApi.create({
-        substrateNodeUrl,
-        ipfsNodeUrl,
-    });
-    if (!seedPhrase)
-        throw new Error("PhraseSecret not found");
-    const authHeader = (0, api_1.generateCrustAuthToken)(seedPhrase);
-    api_local.ipfs.setWriteHeaders({
-        authorization: "Basic " + authHeader,
-    });
-    return api_local;
+    try {
+        const api_local = yield api_1.SubsocialApi.create({
+            substrateNodeUrl,
+            ipfsNodeUrl,
+        });
+        if (!seedPhrase)
+            throw new Error("PhraseSecret not found");
+        const authHeader = (0, api_1.generateCrustAuthToken)(seedPhrase);
+        api_local.ipfs.setWriteHeaders({
+            authorization: "Basic " + authHeader,
+        });
+        return api_local;
+    }
+    catch (error) {
+        throw new Error("Error while building Subsocial API: " + error.message);
+    }
 });
 exports.createSubsocialApi = createSubsocialApi;
 const getAllDataOfSpace = (api, spaceId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const space = yield api.findSpace({ id: spaceId });
-        const postIds = yield api.blockchain.postIdsBySpaceId(spaceId);
-        let posts = yield api.findPosts({ ids: postIds });
+        if (!space)
+            throw new Error("Space not found");
+        // const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
+        // let posts = await api.findPosts({ ids: postIds });
         let completePosts = [];
-        for (const i in posts) {
-            const replyIds = yield api.blockchain.getReplyIdsByPostId(posts[i].id);
-            const replies = yield api.findPublicPosts(replyIds);
-            completePosts.push(Object.assign(Object.assign({}, posts[i]), { replies }));
-        }
+        // for (const i in posts) {
+        //   const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
+        //   const replies = await api.findPublicPosts(replyIds);
+        //   completePosts.push({ ...posts[i], replies });
+        // }
         return { space, completePosts };
     }
     catch (error) {
@@ -58,7 +65,7 @@ const pushNode = (api, space, posts, actions, createNodeId, createContentDigest)
         parent: null,
         children: post_with_comments_as_child_node,
         internal: {
-            type: "Space",
+            type: "SpacesSubsocial",
             contentDigest: createContentDigest(space),
         },
     };
