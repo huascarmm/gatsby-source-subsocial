@@ -89,10 +89,7 @@ const pushNode = (space, posts, actions, createNodeId, createContentDigest) => _
             contentDigest: createContentDigest(space),
         },
     };
-    for (const post of node.children) {
-        console.log(post.children);
-    }
-    // createNode(node);
+    createNode(node);
 });
 exports.pushNode = pushNode;
 const subNodes = (createContentDigest, createNodeId, parentId, elements, children = []) => {
