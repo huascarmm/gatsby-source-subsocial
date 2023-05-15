@@ -1,7 +1,7 @@
 import showdown from "showdown";
 import { SubsocialApi, generateCrustAuthToken } from "@subsocial/api";
-import { AnySpaceId, SpaceData } from "@subsocial/api/types";
-import { CompletePost } from "./types";
+import { AnySpaceId, PostData, SpaceData } from "@subsocial/api/types";
+import { CompletePost, Space } from "./types";
 
 export const createSubsocialApi = async ({
   substrateNodeUrl,
@@ -35,16 +35,19 @@ export const getAllDataOfSpace = async (
   spaceId: AnySpaceId
 ) => {
   try {
-    const space = await api.findSpace({ id: spaceId });
-    if (!space) throw new Error("Space not found");
+    //getting sapace with profile
+    const nativeSpace = await api.findSpace({ id: spaceId });
+    if (!nativeSpace) throw new Error("Space not found");
+    const spaceProfile = await getProfile(api, nativeSpace.struct.ownerId);
+    const space: Space = {
+      ...nativeSpace,
+      author: spaceProfile.content ?? {},
+    };
+
     const postIds = await api.blockchain.postIdsBySpaceId(spaceId);
     let posts = await api.findPosts({ ids: postIds });
-    let completePosts: CompletePost[] = [];
-    for (const i in posts) {
-      const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
-      const replies = await api.findPublicPosts(replyIds);
-      completePosts.push({ ...posts[i], replies });
-    }
+    const completePosts = await completePostsGetter(posts, api);
+
     return { space, completePosts };
   } catch (error: any) {
     throw new Error(
@@ -53,63 +56,90 @@ export const getAllDataOfSpace = async (
   }
 };
 
+const completePostsGetter = async (
+  posts: PostData[],
+  api: SubsocialApi
+): Promise<CompletePost[]> => {
+  let completePosts: CompletePost[] = [];
+  for (const i in posts) {
+    const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
+    const nativeReplies = await api.findPublicPosts(replyIds);
+    const replies = await Promise.all(
+      nativeReplies
+        .filter((reply) => !reply.struct.hidden)
+        .map(async (reply) => {
+          return {
+            ...reply,
+            author: (await getProfile(api, reply.struct.ownerId)).content ?? {},
+          };
+        })
+    );
+
+    const author =
+      (await getProfile(api, posts[i].struct.ownerId)).content ?? {};
+
+    completePosts.push({ ...posts[i], replies, author });
+  }
+
+  return completePosts;
+};
+
 export const pushNode = async (
-  api: SubsocialApi,
-  space: SpaceData,
+  space: Space,
   posts: CompletePost[],
   actions: { createNode: any },
   createNodeId: (arg0: string) => any,
   createContentDigest: (arg0: SpaceData) => any
 ) => {
   const { createNode } = actions;
-  const post_with_comments_as_child_node = await posts.map(async (post) => {
-    const children = await subNodes(
-      api,
+  const post_with_comments_as_child_node = posts.map((post) => {
+    const children = subNodes(
       createContentDigest,
       createNodeId,
       post.id,
       post.replies
     );
-    const post_w = await subNode(
-      api,
+
+    const post_w = subNode(
       createContentDigest,
       createNodeId,
       `subsocial-space-${space.id}`,
-      { struct: post.struct, content: post.content, id: post.id },
+      post,
       children
     );
+
     return post_w;
   });
-  post_with_comments_as_child_node.forEach((post) => {
-    console.log("post 1", post);
-  });
+
   const node = {
     id: createNodeId(`subsocial-space-${space.id}`),
     parent: null,
-    children: [], //post_with_comments_as_child_node,
+    children: post_with_comments_as_child_node,
     struct: space.struct,
     content: space.content,
+    author: space.author,
     internal: {
       type: "SpacesSubsocial",
       contentDigest: createContentDigest(space),
     },
   };
-  createNode(node);
+  for (const post of node.children) {
+    console.log(post.children);
+  }
+  // createNode(node);
 };
 
-export const subNodes = async (
-  api: SubsocialApi,
+export const subNodes = (
   createContentDigest: any,
   createNodeId: any,
   parentId: String,
   elements: any[],
   children = []
 ) => {
-  return await elements
+  return elements
     .filter((element) => !element.struct.hidden)
-    .map(async (element: any) => {
-      return await subNode(
-        api,
+    .map((element: any) => {
+      return subNode(
         createContentDigest,
         createNodeId,
         parentId,
@@ -119,12 +149,11 @@ export const subNodes = async (
     });
 };
 
-export const subNode = async (
-  api: SubsocialApi,
+export const subNode = (
   createContentDigest: (arg0: any) => any,
   createNodeId: (arg0: any) => any,
   parentId: String,
-  element: { struct: any; content: any; id: any },
+  element: CompletePost,
   children: any[] = []
 ) => {
   const {
@@ -136,15 +165,14 @@ export const subNode = async (
     isSharedPost,
   } = element.struct;
 
-  const { body, summary, image } = element.content;
+  const content = element.content ?? { body: "", summary: "", image: "" };
+  const { body, summary, image } = content;
 
-  const profile = await getProfile(api, element.struct.ownerId);
   const type = element.struct.isComment ? "Comment" : "BlogPost";
   const node = {
     parent: parentId,
     id: createNodeId(element.id),
     children,
-    author: profile.content,
     content: {
       ...element.content,
       body: markdownToHtml(body),
@@ -163,6 +191,7 @@ export const subNode = async (
       type,
       contentDigest: createContentDigest(element.content),
     },
+    author: element.author,
   };
   return node;
 };

@@ -1,4 +1,10 @@
-import { PostData } from "@subsocial/api/types";
+import {
+  PostContent,
+  PostData,
+  PostStruct,
+  SpaceContent,
+  SpaceData,
+} from "@subsocial/api/types";
 export type ConfigTypes = {
   substrateNodeUrl: string;
   ipfsNodeUrl: string;
@@ -7,5 +13,13 @@ export type ConfigTypes = {
 };
 
 export type CompletePost = PostData & {
-  replies: PostData[];
+  replies: {
+    author: SpaceContent | {};
+    id: string;
+    struct: PostStruct;
+    content?: PostContent | undefined;
+  }[];
+  author: SpaceContent | {};
 };
+
+export type Space = SpaceData & { author: SpaceContent | {} };

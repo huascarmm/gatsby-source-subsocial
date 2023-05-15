@@ -35,18 +35,17 @@ const createSubsocialApi = ({ substrateNodeUrl, ipfsNodeUrl, seedPhrase, }) => _
 });
 exports.createSubsocialApi = createSubsocialApi;
 const getAllDataOfSpace = (api, spaceId) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        const space = yield api.findSpace({ id: spaceId });
-        if (!space)
+        //getting sapace with profile
+        const nativeSpace = yield api.findSpace({ id: spaceId });
+        if (!nativeSpace)
             throw new Error("Space not found");
+        const spaceProfile = yield getProfile(api, nativeSpace.struct.ownerId);
+        const space = Object.assign(Object.assign({}, nativeSpace), { author: (_a = spaceProfile.content) !== null && _a !== void 0 ? _a : {} });
         const postIds = yield api.blockchain.postIdsBySpaceId(spaceId);
         let posts = yield api.findPosts({ ids: postIds });
-        let completePosts = [];
-        for (const i in posts) {
-            const replyIds = yield api.blockchain.getReplyIdsByPostId(posts[i].id);
-            const replies = yield api.findPublicPosts(replyIds);
-            completePosts.push(Object.assign(Object.assign({}, posts[i]), { replies }));
-        }
+        const completePosts = yield completePostsGetter(posts, api);
         return { space, completePosts };
     }
     catch (error) {
@@ -54,48 +53,66 @@ const getAllDataOfSpace = (api, spaceId) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.getAllDataOfSpace = getAllDataOfSpace;
-const pushNode = (api, space, posts, actions, createNodeId, createContentDigest) => __awaiter(void 0, void 0, void 0, function* () {
+const completePostsGetter = (posts, api) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    let completePosts = [];
+    for (const i in posts) {
+        const replyIds = yield api.blockchain.getReplyIdsByPostId(posts[i].id);
+        const nativeReplies = yield api.findPublicPosts(replyIds);
+        const replies = yield Promise.all(nativeReplies
+            .filter((reply) => !reply.struct.hidden)
+            .map((reply) => __awaiter(void 0, void 0, void 0, function* () {
+            var _c;
+            return Object.assign(Object.assign({}, reply), { author: (_c = (yield getProfile(api, reply.struct.ownerId)).content) !== null && _c !== void 0 ? _c : {} });
+        })));
+        const author = (_b = (yield getProfile(api, posts[i].struct.ownerId)).content) !== null && _b !== void 0 ? _b : {};
+        completePosts.push(Object.assign(Object.assign({}, posts[i]), { replies, author }));
+    }
+    return completePosts;
+});
+const pushNode = (space, posts, actions, createNodeId, createContentDigest) => __awaiter(void 0, void 0, void 0, function* () {
     const { createNode } = actions;
-    const post_with_comments_as_child_node = yield posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
-        const children = yield (0, exports.subNodes)(api, createContentDigest, createNodeId, post.id, post.replies);
-        const post_w = yield (0, exports.subNode)(api, createContentDigest, createNodeId, `subsocial-space-${space.id}`, { struct: post.struct, content: post.content, id: post.id }, children);
+    const post_with_comments_as_child_node = posts.map((post) => {
+        const children = (0, exports.subNodes)(createContentDigest, createNodeId, post.id, post.replies);
+        const post_w = (0, exports.subNode)(createContentDigest, createNodeId, `subsocial-space-${space.id}`, post, children);
         return post_w;
-    }));
-    post_with_comments_as_child_node.forEach((post) => {
-        console.log("post 1", post);
     });
     const node = {
         id: createNodeId(`subsocial-space-${space.id}`),
         parent: null,
-        children: [],
+        children: post_with_comments_as_child_node,
         struct: space.struct,
         content: space.content,
+        author: space.author,
         internal: {
             type: "SpacesSubsocial",
             contentDigest: createContentDigest(space),
         },
     };
-    createNode(node);
+    for (const post of node.children) {
+        console.log(post.children);
+    }
+    // createNode(node);
 });
 exports.pushNode = pushNode;
-const subNodes = (api, createContentDigest, createNodeId, parentId, elements, children = []) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield elements
+const subNodes = (createContentDigest, createNodeId, parentId, elements, children = []) => {
+    return elements
         .filter((element) => !element.struct.hidden)
-        .map((element) => __awaiter(void 0, void 0, void 0, function* () {
-        return yield (0, exports.subNode)(api, createContentDigest, createNodeId, parentId, element, children);
-    }));
-});
+        .map((element) => {
+        return (0, exports.subNode)(createContentDigest, createNodeId, parentId, element, children);
+    });
+};
 exports.subNodes = subNodes;
-const subNode = (api, createContentDigest, createNodeId, parentId, element, children = []) => __awaiter(void 0, void 0, void 0, function* () {
+const subNode = (createContentDigest, createNodeId, parentId, element, children = []) => {
+    var _a;
     const { createdAtTime, isUpdated, upvotesCount, downvotesCount, isRegularPost, isSharedPost, } = element.struct;
-    const { body, summary, image } = element.content;
-    const profile = yield getProfile(api, element.struct.ownerId);
+    const content = (_a = element.content) !== null && _a !== void 0 ? _a : { body: "", summary: "", image: "" };
+    const { body, summary, image } = content;
     const type = element.struct.isComment ? "Comment" : "BlogPost";
     const node = {
         parent: parentId,
         id: createNodeId(element.id),
         children,
-        author: profile.content,
         content: Object.assign(Object.assign({}, element.content), { body: markdownToHtml(body), summary: markdownToHtml(summary), mainImage: getImageFromId(image) }),
         struct: {
             createdAtTime,
@@ -109,10 +126,10 @@ const subNode = (api, createContentDigest, createNodeId, parentId, element, chil
             type,
             contentDigest: createContentDigest(element.content),
         },
+        author: element.author,
     };
-    console.log("node", node);
     return node;
-});
+};
 exports.subNode = subNode;
 const getProfile = (api, accountId) => __awaiter(void 0, void 0, void 0, function* () {
     const profile = yield api.findProfileSpace(accountId);

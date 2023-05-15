@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const methods_1 = require("./methods");
-exports.sourceNodes = ({ actions, createNodeId, createContentDigest }, { substrateNodeUrl, ipfsNodeUrl, spaceIds, seedPhrase }) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
+function main(substrateNodeUrl, ipfsNodeUrl, spaceIds, seedPhrase) {
+    return __awaiter(this, void 0, void 0, function* () {
         const api = yield (0, methods_1.createSubsocialApi)({
             substrateNodeUrl,
             ipfsNodeUrl,
@@ -22,12 +22,15 @@ exports.sourceNodes = ({ actions, createNodeId, createContentDigest }, { substra
             spaceDataPromises.push((0, methods_1.getAllDataOfSpace)(api, spaceId));
         }
         const spaceData = yield Promise.all(spaceDataPromises);
+        const createNodeId = (id) => id;
+        const createContentDigest = (id) => id;
+        const actions = {
+            createNode: (node) => null,
+        };
         for (const { space, completePosts } of spaceData) {
             console.log("Size", completePosts.length);
             (0, methods_1.pushNode)(space, completePosts, actions, createNodeId, createContentDigest);
         }
-    }
-    catch (error) {
-        throw new Error("Error global: " + error.message);
-    }
-});
+    });
+}
+main("wss://para.f3joule.space", "https://ipfs.subsocial.network", ["10497"], "power team beyond begin parade vendor leopard accident key gym lecture hammer");
