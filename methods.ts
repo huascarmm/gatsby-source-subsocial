@@ -123,10 +123,7 @@ export const pushNode = async (
       contentDigest: createContentDigest(space),
     },
   };
-  for (const post of node.children) {
-    console.log(post.children);
-  }
-  // createNode(node);
+  createNode(node);
 };
 
 export const subNodes = (
