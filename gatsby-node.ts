@@ -7,7 +7,7 @@ exports.sourceNodes = (
   { substrateNodeUrl, ipfsNodeUrl, spaceIds, seedPhrase }: ConfigTypes
 ) => {
   try {
-    const api = createSubsocialApi({
+    createSubsocialApi({
       substrateNodeUrl,
       ipfsNodeUrl,
       seedPhrase,
