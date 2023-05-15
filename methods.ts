@@ -64,21 +64,21 @@ const completePostsGetter = async (
   for (const i in posts) {
     const replyIds = await api.blockchain.getReplyIdsByPostId(posts[i].id);
     const nativeReplies = await api.findPublicPosts(replyIds);
-    const replies = await Promise.all(
-      nativeReplies
-        .filter((reply) => !reply.struct.hidden)
-        .map(async (reply) => {
-          return {
-            ...reply,
-            author: (await getProfile(api, reply.struct.ownerId)).content ?? {},
-          };
-        })
-    );
+    // const replies = await Promise.all(
+    //   nativeReplies
+    //     .filter((reply) => !reply.struct.hidden)
+    //     .map(async (reply) => {
+    //       return {
+    //         ...reply,
+    //         author: (await getProfile(api, reply.struct.ownerId)).content ?? {},
+    //       };
+    //     })
+    // );
 
     const author =
       (await getProfile(api, posts[i].struct.ownerId)).content ?? {};
 
-    completePosts.push({ ...posts[i], replies, author });
+    completePosts.push({ ...posts[i], replies: [], author });
   }
 
   return completePosts;

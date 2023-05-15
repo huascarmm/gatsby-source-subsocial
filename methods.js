@@ -59,14 +59,18 @@ const completePostsGetter = (posts, api) => __awaiter(void 0, void 0, void 0, fu
     for (const i in posts) {
         const replyIds = yield api.blockchain.getReplyIdsByPostId(posts[i].id);
         const nativeReplies = yield api.findPublicPosts(replyIds);
-        const replies = yield Promise.all(nativeReplies
-            .filter((reply) => !reply.struct.hidden)
-            .map((reply) => __awaiter(void 0, void 0, void 0, function* () {
-            var _c;
-            return Object.assign(Object.assign({}, reply), { author: (_c = (yield getProfile(api, reply.struct.ownerId)).content) !== null && _c !== void 0 ? _c : {} });
-        })));
+        // const replies = await Promise.all(
+        //   nativeReplies
+        //     .filter((reply) => !reply.struct.hidden)
+        //     .map(async (reply) => {
+        //       return {
+        //         ...reply,
+        //         author: (await getProfile(api, reply.struct.ownerId)).content ?? {},
+        //       };
+        //     })
+        // );
         const author = (_b = (yield getProfile(api, posts[i].struct.ownerId)).content) !== null && _b !== void 0 ? _b : {};
-        completePosts.push(Object.assign(Object.assign({}, posts[i]), { replies, author }));
+        completePosts.push(Object.assign(Object.assign({}, posts[i]), { replies: [], author }));
     }
     return completePosts;
 });
