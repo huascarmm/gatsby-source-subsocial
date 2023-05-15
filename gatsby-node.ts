@@ -19,7 +19,7 @@ exports.sourceNodes = async (
     }
     const spaceData = await Promise.all(spaceDataPromises);
     for (const { space, completePosts } of spaceData) {
-      console.log("Size", completePosts.length);
+      console.log("Size 1", completePosts.length);
       pushNode(
         space,
         completePosts,

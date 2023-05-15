@@ -23,7 +23,7 @@ exports.sourceNodes = ({ actions, createNodeId, createContentDigest }, { substra
         }
         const spaceData = yield Promise.all(spaceDataPromises);
         for (const { space, completePosts } of spaceData) {
-            console.log("Size", completePosts.length);
+            console.log("Size 1", completePosts.length);
             (0, methods_1.pushNode)(space, completePosts, actions, createNodeId, createContentDigest);
         }
     }
